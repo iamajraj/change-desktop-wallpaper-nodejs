@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Change Desktop Wallpaper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div
+      class="bg-gray-900 w-full h-screen text-white flex items-center pt-10 flex-col gap-5"
+    >
+      <h1 class="text-3xl font-medium">Change My Desktop Wallpaper</h1>
+      <div
+        class="rounded-lg max-w-[300px] min-w-[200px] px-10 py-2 bg-gradient-to-tr from-gray-800 to-gray-900 shadow-lg border border-gray-700 flex items-center flex-col"
+      >
+        <label for="fileupload" class="cursor-pointer block"
+          >*Choose Image*</label
+        >
+        <input
+          type="file"
+          multiple="false"
+          name="image"
+          class="hidden"
+          id="fileupload"
+        />
+      </div>
+      <div
+        class="rounded-lg max-w-[300px] min-w-[200px] px-10 py-2 bg-gradient-to-tr from-gray-800 to-gray-900 shadow-lg border border-gray-700 flex items-center flex-col"
+      >
+        <img class="preview_img bg-cover" />
+        <p id="file_info"></p>
+      </div>
+      <button
+        class="set-btn px-10 shadow-md shadow-gray-700/40 border border-gray-800 py-2 bg-gradient-to-tr from-gray-800 to-gray-900 hover:border-gray-700 transition-all rounded-lg cursor-pointer"
+        type="button"
+      >
+        Set
+      </button>
+      <p class="message"></p>
+    </div>
+
+    <script>
+      const URL = 'http://localhost:5000/set-desktop-wallpaper';
+      const fileInp = document.querySelector('[name=image]');
+      const messageTag = document.querySelector('.message');
+      const previewImage = document.querySelector('.preview_img');
+      const fileInfo = document.querySelector('#file_info');
+      const btn = document.querySelector('.set-btn');
+
+      let file;
+
+      fileInp.addEventListener('change', (e) => {
+        file = e.target.files[0];
+
+        if (!file) return;
+
+        fileInfo.textContent = file.name;
+
+        console.log(file);
+
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+          previewImage.src = fileReader.result;
+        };
+        fileReader.readAsDataURL(file);
+      });
+
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.set('image', file);
+
+        try {
+          const res = await fetch(URL, {
+            method: 'POST',
+            body: formData,
+          });
+          const jsonResponse = await res.json();
+          messageTag.textContent = jsonResponse.message;
+        } catch (err) {
+          messageTag.textContent = err?.message ?? 'Something went wrong';
+        }
+      });
+    </script>
+  </body>
+</html>

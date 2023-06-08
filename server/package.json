@@ -1,0 +1,20 @@
+{
+  "name": "change_deskwallapper_by_online",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cors": "^8.3.0",
+    "@fastify/multipart": "^7.6.0",
+    "fastify": "^4.17.0",
+    "wallpaper": "^6.1.1"
+  }
+}
